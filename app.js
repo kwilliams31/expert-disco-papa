@@ -1,29 +1,54 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
-const port = 3000
+const PORT = process.env.PORT || 3000;  
+const bodyParser = require('body-parser')
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://kwilliams31:<password>@cluster0.fmwwnxu.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const client = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+// const uri = "mongodb+srv://kwilliams31:<password>@cluster0.fmwwnxu.mongodb.net/?retryWrites=true&w=majority";
 
-console.log('before connection');
 
-client.connect(err => {
-    console.log('in connect method');
-  const collection = client.db("test").collection("devices");
+app.use(bodyParser.urlencoded({ extended: true }))
 
-  console.log('decl collection');
-  // perform actions on the collection object
-  client.close();
-});
+async function cxnDB(){
+
+  try{
+    client.connect; 
+    const collection = client.db("papa").collection("dev-profiles");
+    const result = await collection.find().toArray();
+    //const result = await collection.findOne(); 
+    console.log("cxnDB result: ", result);
+    return result; 
+  }
+  catch(e){
+      console.log(e)
+  }
+  finally{
+    client.close; 
+  }
+}
+
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('his this is she! <br/> <a href="mongo">mongo</a>');
+})
+
+app.get('/mongo', async (req, res) => {
+
+  // res.send("check your node console, bro");
+
+  let result = await cxnDB().catch(console.error); 
+
+  console.log('in get to slash mongo', result[1].drink_name); 
+
+  res.send(`here ya go, joe. ${ result[1].drink_name }` ); 
+
 })
 
 console.log('in the node console');
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${ PORT }`)
 })
