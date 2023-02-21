@@ -3,20 +3,27 @@ const express = require('express')
 const app = express()
 const PORT = process.env.PORT || 3000;  
 const bodyParser = require('body-parser')
-
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
+
+
+
+// const uri = "mongodb+srv://kwilliams31:9MVfWqRjRU3DvosT@cluster0.fmwwnxu.mongodb.net/?retryWrites=true&w=majority";
+
+//connecting to his db
+// const uri = "mongodb+srv://barry:nb3amjtQWhSN6ibH@cluster0.taug6.mongodb.net/?retryWrites=true&w=majority"; 
+
 const client = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// const uri = "mongodb+srv://kwilliams31:<password>@cluster0.fmwwnxu.mongodb.net/?retryWrites=true&w=majority";
-
-
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.set('view engine', 'ejs');
 
 async function cxnDB(){
 
   try{
     client.connect; 
-    const collection = client.db("papa").collection("dev-profiles");
+    const collection = client.db("chillAppz").collection("drinkz");
+
+    // const collection = client.db("papa").collection("dev-profiles");
     const result = await collection.find().toArray();
     //const result = await collection.findOne(); 
     console.log("cxnDB result: ", result);
@@ -32,7 +39,9 @@ async function cxnDB(){
 
 
 app.get('/', (req, res) => {
-  res.send('his this is she! <br/> <a href="mongo">mongo</a>');
+  //res.send('his this is she! <br/> <a href="mongo">mongo</a>');
+
+  res.render('index');
 })
 
 app.get('/mongo', async (req, res) => {
@@ -45,6 +54,21 @@ app.get('/mongo', async (req, res) => {
 
   res.send(`here ya go, joe. ${ result[1].drink_name }` ); 
 
+})
+
+app.get('/update', async (req, res) => {
+
+    // want to get data from the form
+    console.log("in get to slash update:", req.query.ejsFormName); 
+    myName = req.query.ejsFormName; 
+
+    // update into the db
+    client.connect; 
+    const collection = client.db("chillAppz").collection("drinkz");
+
+    await collection.insertOne({
+      drink_name: 'coldie'
+    });
 })
 
 console.log('in the node console');
