@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const PORT = process.env.PORT || 3000;  
 const bodyParser = require('body-parser')
+const { ObjectId } = require('mongodb')
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 
@@ -21,7 +22,7 @@ async function cxnDB(){
 
   try{
     client.connect; 
-    const collection = client.db("chillAppz").collection("drinkz");
+    const collection = client.db("papa-lab").collection("dev-profiles");
 
     // const collection = client.db("papa").collection("dev-profiles");
     const result = await collection.find().toArray();
@@ -38,10 +39,14 @@ async function cxnDB(){
 }
 
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   //res.send('his this is she! <br/> <a href="mongo">mongo</a>');
 
-  res.render('index');
+  let result = await cxnDB().catch(console.error); 
+
+  res.render('index', {
+  nameData : result
+  });
 })
 
 app.get('/mongo', async (req, res) => {
@@ -50,9 +55,9 @@ app.get('/mongo', async (req, res) => {
 
   let result = await cxnDB().catch(console.error); 
 
-  console.log('in get to slash mongo', result[1].drink_name); 
+  console.log('in get to slash mongo', result[2].name); 
 
-  res.send(`here ya go, joe. ${ result[1].drink_name }` ); 
+  res.send(`here ya go, joe. ${ result[2].name }` ); 
 
 })
 
@@ -64,12 +69,39 @@ app.get('/update', async (req, res) => {
 
     // update into the db
     client.connect; 
-    const collection = client.db("chillAppz").collection("drinkz");
+    const collection = client.db("papa-lab").collection("dev-profiles");
 
     await collection.insertOne({
-      drink_name: 'coldie'
+      name: "Joe"
     });
 })
+
+app.post('/deleteName/:id', async (req, res) => {
+
+  try {
+    console.log("req.parms.id: ", req.params.id) 
+    
+    client.connect; 
+    const collection = client.db("papa-lab").collection("dev-profiles");
+    let result = await collection.findOneAndDelete( 
+      {
+        "_id": new ObjectId(req.params.id)
+      }
+
+    )
+    .then(result => {
+      console.log(result); 
+      res.redirect('/');
+    })
+    .catch(error => console.error(error))
+  }
+  finally{
+    //client.close()
+  }
+
+})
+
+
 
 console.log('in the node console');
 
