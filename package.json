@@ -15,6 +15,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
+  "engines": {
+    "node": ">18",
+    "npm": ">8"
+  },
   "name": "expert-disco-papa",
   "description": "",
   "version": "1.0.0",
