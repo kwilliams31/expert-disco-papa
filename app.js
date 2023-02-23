@@ -76,6 +76,26 @@ app.get('/update', async (req, res) => {
     });
 })
 
+
+app.post('/addName', async (req, res) => {
+
+  try {
+    // console.log("req.body: ", req.body) 
+    client.connect; 
+    const collection = client.db("papa-lab").collection("dev-profiles");
+    await collection.insertOne(req.body);
+      
+    res.redirect('/');
+  }
+  catch(e){
+    console.log(error)
+  }
+  finally{
+   // client.close()
+  }
+
+})
+
 app.post('/deleteName/:id', async (req, res) => {
 
   try {

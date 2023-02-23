@@ -4,11 +4,11 @@
 put in env file touch .env-->
 
 <!-- adding a name -->
-<form method="get" action="/update">
+<!-- <form method="get" action="/update">
     <p>Type anything!..? </p>
     <input type="text" name="ejsFormName" value=""> 
     <input type="submit">
-  </form>
+  </form> -->
 
   <h3> Current names on hand</h3> 
  <% for (var i=0; i< nameData.length; i++ ) { %>
@@ -18,3 +18,13 @@ put in env file touch .env-->
   </form>
   <br/>
 <% } %> 
+
+<h3> add a new dev name </h3>
+
+<form method="POST" action="/addName">
+    <label for="name">Name</label>
+        <input name="name" value="new name">
+    <br>
+    <br>
+    <input type="submit" value="add a name" />
+</form>
