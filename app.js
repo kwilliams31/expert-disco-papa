@@ -121,6 +121,28 @@ app.post('/deleteName/:id', async (req, res) => {
 
 })
 
+app.post('/updateName/:id', async (req, res) => {
+
+  try {
+    console.log("req.parms.id: ", req.params.id) 
+    
+    client.connect; 
+    const collection = client.db("papa-lab").collection("dev-profiles");
+    let result = await collection.findOneAndUpdate( 
+      { "_id": new ObjectId(req.params.id) }, {$set: {name: "new name" }} )
+
+    .then(result => {
+      console.log(result); 
+      res.redirect('/');
+    })
+    .catch(error => console.error(error))
+  }
+  finally{
+    //client.close()
+  }
+
+})
+
 
 
 console.log('in the node console');

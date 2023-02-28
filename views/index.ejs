@@ -28,3 +28,15 @@ put in env file touch .env-->
     <br>
     <input type="submit" value="add a name" />
 </form>
+
+
+<h3> Let's update the names</h3> 
+<% for (var i=0; i< nameData.length; i++ ) { %>
+ <form method="POST" action="/updateName/<%= nameData[i]._id %>" style="display: inline-block">  
+   <%= nameData[i].name %> (<%= nameData[i].size %>) 
+   <input type="submit" value="update"> 
+ </form>
+ <br/>
+<% } %> 
+
+
